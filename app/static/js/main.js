@@ -31,14 +31,44 @@
 
   let editingBlockIndex = null;
 
-  Sortable.create(blockList, {
-    animation: 150,
-    handle: '.block-drag-handle',
-    onEnd: function () {
-      rebuildBlocksFromDOM();
-      markDirty();
-    }
-  });
+  const snippetList = document.getElementById('snippet-list');
+
+  function initBlockListSortable() {
+    Sortable.create(blockList, {
+      animation: 150,
+      handle: '.block-drag-handle',
+      group: {
+        name: 'blocks',
+        pull: false,
+        put: true
+      },
+      onAdd: function (evt) {
+        evt.item.remove();
+        var content = evt.item.dataset.content || '';
+        blocks.splice(evt.newIndex, 0, { content: content });
+        renderBlocks();
+        markDirty();
+      },
+      onEnd: function () {
+        rebuildBlocksFromDOM();
+        markDirty();
+      }
+    });
+  }
+
+  if (snippetList) {
+    Sortable.create(snippetList, {
+      sort: false,
+      group: {
+        name: 'blocks',
+        pull: 'clone',
+        put: false
+      },
+      animation: 150
+    });
+  }
+
+  initBlockListSortable();
 
   function rebuildBlocksFromDOM() {
     const items = blockList.querySelectorAll('.prompt-block');
@@ -49,8 +79,12 @@
   }
 
   function renderBlocks() {
+    if (blockList.sortable) {
+      blockList.sortable.destroy();
+    }
     if (blocks.length === 0) {
       blockList.innerHTML = '<div class="text-center text-gray-400 py-12 text-sm">Drag snippets here or click <strong>+ New</strong> to add a block.</div>';
+      initBlockListSortable();
       return;
     }
     blockList.innerHTML = blocks.map(function (b, i) {
@@ -80,6 +114,7 @@
         editBlock(idx);
       });
     });
+    initBlockListSortable();
   }
 
   function editBlock(index) {
@@ -218,21 +253,6 @@
     card.addEventListener('dblclick', function () {
       addBlock(card.dataset.content);
     });
-    card.addEventListener('dragstart', function (e) {
-      e.dataTransfer.setData('text/plain', card.dataset.content);
-    });
-  });
-
-  blockList.addEventListener('dragover', function (e) {
-    e.preventDefault();
-  });
-
-  blockList.addEventListener('drop', function (e) {
-    e.preventDefault();
-    var content = e.dataTransfer.getData('text/plain');
-    if (content) {
-      addBlock(content);
-    }
   });
 
   function markDirty() {
