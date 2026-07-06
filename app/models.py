@@ -11,6 +11,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
+    theme = db.Column(db.String(20), default='light')
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     snippets = db.relationship('Snippet', backref='user', lazy='dynamic', cascade='all, delete-orphan')

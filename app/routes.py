@@ -11,7 +11,7 @@ bp = Blueprint('main', __name__)
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('main.workbench'))
-    return redirect(url_for('main.login'))
+    return render_template('landing.html')
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -52,7 +52,7 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.login'))
+    return redirect(url_for('main.index'))
 
 
 @bp.route('/workbench')
@@ -61,6 +61,58 @@ def workbench():
     snippets = Snippet.query.filter_by(user_id=current_user.id).order_by(Snippet.position).all()
     canvases = Canvas.query.filter_by(user_id=current_user.id).order_by(Canvas.updated_at.desc()).all()
     return render_template('workbench.html', snippets=snippets, canvases=canvases)
+
+
+@bp.route('/account', methods=['GET'])
+@login_required
+def account():
+    return render_template('account.html')
+
+
+@bp.route('/api/account/email', methods=['POST'])
+@login_required
+def update_email():
+    data = request.get_json()
+    new_email = data.get('email', '').strip().lower()
+    password = data.get('password', '')
+    if not new_email or not password:
+        return jsonify({'error': 'Email and password are required.'}), 400
+    if not current_user.check_password(password):
+        return jsonify({'error': 'Current password is incorrect.'}), 403
+    if User.query.filter(User.id != current_user.id, User.email == new_email).first():
+        return jsonify({'error': 'Email already in use.'}), 409
+    current_user.email = new_email
+    db.session.commit()
+    return jsonify({'ok': True, 'email': current_user.email})
+
+
+@bp.route('/api/account/password', methods=['POST'])
+@login_required
+def update_password():
+    data = request.get_json()
+    current_pw = data.get('current_password', '')
+    new_pw = data.get('new_password', '')
+    if not current_pw or not new_pw:
+        return jsonify({'error': 'All fields are required.'}), 400
+    if not current_user.check_password(current_pw):
+        return jsonify({'error': 'Current password is incorrect.'}), 403
+    if len(new_pw) < 6:
+        return jsonify({'error': 'New password must be at least 6 characters.'}), 400
+    current_user.set_password(new_pw)
+    db.session.commit()
+    return jsonify({'ok': True})
+
+
+@bp.route('/api/account/theme', methods=['POST'])
+@login_required
+def update_theme():
+    data = request.get_json()
+    theme = data.get('theme', 'light')
+    if theme not in ('light', 'dark-light', 'dark'):
+        return jsonify({'error': 'Invalid theme.'}), 400
+    current_user.theme = theme
+    db.session.commit()
+    return jsonify({'ok': True, 'theme': current_user.theme})
 
 
 @bp.route('/api/snippets', methods=['GET'])

@@ -33,5 +33,16 @@ def create_app(testing=False):
 
     with app.app_context():
         db.create_all()
+        _run_migrations(app)
 
     return app
+
+
+def _run_migrations(app):
+    from app import models
+    with app.app_context():
+        inspector = db.inspect(db.engine)
+        cols = [c['name'] for c in inspector.get_columns('users')]
+        if 'theme' not in cols:
+            db.session.execute(db.text('ALTER TABLE users ADD COLUMN theme VARCHAR(20) DEFAULT \'light\''))
+            db.session.commit()

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlockSmithy — Build Better Prompts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen flex flex-col" style="font-family: 'Inter', sans-serif;">
+  <header class="px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full">
+    <span class="text-2xl font-extrabold text-indigo-600 tracking-tight">BlockSmithy</span>
+    <div class="flex items-center gap-3">
+      <a href="{{ url_for('main.login') }}"
+         class="text-sm font-medium text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg transition">Log In</a>
+      <a href="{{ url_for('main.login') }}"
+         class="text-sm font-semibold bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition shadow-sm">Register Free</a>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col">
+    <section class="flex-1 flex items-center justify-center px-6 py-20">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-tight">
+          Build <span class="text-indigo-600">Better</span> Prompts<br>
+          <span class="text-gray-400">Block by Block.</span>
+        </h1>
+        <p class="mt-6 text-lg md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
+          Visually assemble, arrange, and manage text snippets to construct
+          <span class="font-semibold text-gray-700">optimized prompts</span>
+          for LLMs. Drag, drop, save, and export your prompt engineering work — no coding required.
+        </p>
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="{{ url_for('main.login') }}"
+             class="w-full sm:w-auto text-center bg-indigo-600 text-white px-10 py-4 rounded-xl text-lg font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
+            Get Started Free
+          </a>
+          <a href="{{ url_for('main.login') }}"
+             class="w-full sm:w-auto text-center text-gray-600 px-10 py-4 rounded-xl text-lg font-medium border border-gray-300 hover:border-gray-400 hover:text-gray-900 transition">
+            Sign In
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 md:py-20 px-6 bg-gray-50 border-t border-gray-100">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-5 text-2xl">🧩</div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Drag &amp; Drop Canvas</h3>
+            <p class="text-gray-500 leading-relaxed">Arrange prompt blocks with mouse or touch. Reorder, edit, and delete with zero friction.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-5 text-2xl">📦</div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Snippet Repository</h3>
+            <p class="text-gray-500 leading-relaxed">Save reusable instructions like "Act as an expert coder" and drop them into any canvas.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-5 text-2xl">📋</div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Copy &amp; Export</h3>
+            <p class="text-gray-500 leading-relaxed">One-click copy to clipboard or export as .txt / .md. Your prompts, your format.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="py-6 text-center text-sm text-gray-400 border-t border-gray-100">
+      BlockSmithy &mdash; Built with Flask &amp; PostgreSQL
+    </footer>
+  </main>
+</body>
+</html>
